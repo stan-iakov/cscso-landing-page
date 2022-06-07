@@ -35,7 +35,7 @@ const data = [
     id: 3,
     title: 'Time to market',
     description:
-      'Being on that program for several yearsm the invoice processing was always completed on time.',
+      'Being on that program for several years, the invoice processing was always completed on time.',
     avatar: Avatar3,
     name: 'Shabir T',
     designation: '@shab.tim',

@@ -4,49 +4,104 @@ import { keyframes } from '@emotion/core';
 import { Link } from 'react-scroll';
 import Logo from 'components/logo';
 import LogoDark from 'assets/logo.svg';
+//import LogoDark from 'assets/1822-1856-180onlinelogomaker-049.svg';
 import MobileDrawer from './mobile-drawer';
 import menuItems from './header.data';
 import axios from 'axios';
 import qs from 'qs';
 import React, { useState } from 'react';
 import { CustomLink } from 'components/customLink';
+import { useRouter } from 'next/router';  
 
-const user1 = {
-  firstName: "jojo",
-  lastName: "jojo",
-  email: "jojo@jojo.com",
-  emailVerified: true,
-  enabled: true,
-  username: "jojo@jojo.com",
-  attributes: {"locale": "en", "mobile_number": "+1234567890"},
-  credentials: [
-    {
-      temporary: false,
-      value: "password"
-    }
-  ]
-};
+// const user1 = {
+//   firstName: "jojo",
+//   lastName: "jojo",
+//   email: "jojo@jojo.com",
+//   emailVerified: true,
+//   enabled: true,
+//   username: "jojo@jojo.com",
+//   attributes: {"locale": "en", "mobile_number": "+1234567890"},
+//   credentials: [
+//     {
+//       temporary: false,
+//       value: "password"
+//     }
+//   ]
+// };
 
 export default function Header({ className }) {
 
   const [oauthToken, setOauthToken] = useState("");
 
-  const jsonUser = JSON.stringify(user1);
+  const {query}= useRouter();
 
-  console.log(jsonUser);
+
+  const appraisalCodes = [
+    {code: "ABC-123",supplierName: "Stanimir Iakov", supplierEmail: "stanimir.iakov@bnpparibas.com",buyer: "Tesla",program: "Ethereum Star"},
+    {code: "DEF-456",supplierName: "Emmanuel Anjuere", supplierEmail: "emmanuel.anjuere@bnpparibas.com",buyer: "Thales",program: "Flying Bitcoin"},
+    {code: "GHI-789",supplierName: "Rokhaya Gaye Esnault", supplierEmail: "rokhaya.gayeesnault@bnpparibas.com",buyer: "Auchan",program: "Solana Arrow"},
+    {code: "JKL-011",supplierName: "Vincent Cognet", supplierEmail: "vincent.cognet@bnpparibas.com",buyer: "CAP Gemini",program: "Cardano Storm"},
+    {code: "MNO-012",supplierName: "Karim Zouad", supplierEmail: "karim.zouad@asia.bnpparibas.com",buyer: "SingTel",program: "Matic Lions"},
+    {code: "PQR-013",supplierName: "Ines Mohamed", supplierEmail: "ines.mohamed@bnpparibas.com",buyer: "GUINESS",program: "DAI Constellation"},
+    {code: "STU-014",supplierName: "Tanmoy Konar", supplierEmail: "tanmoy.konar@bnpparibas.com",buyer: "Reliance",program: "Litecoin Magic"},
+    {code: "VWX-015",supplierName: "Xavier Ly", supplierEmail: "xavier.ly@asia.bnpparibas.com",buyer: "HK Electric",program: "Polkadot Dream"},
+    
+    
+    
+    
+  ];
+
+  const buildUser = () => {
+    return appraisalCodes.filter(entry => entry.code===query.code).map((supplier) => {
+      return {
+        firstName: supplier.supplierName,
+        lastName: supplier.supplierName,
+        email: supplier.supplierEmail,
+        emailVerified: true,
+        enabled: true,
+        username: supplier.supplierEmail,
+        attributes: {"locale": "en", "mobile_number": "+1234567890"},
+        credentials: [
+           {
+             temporary: true,
+             value: "password"
+            }
+        ]     
+      }
+    })
+       
+  }
+
+  const jsonUser = JSON.stringify(buildUser()[0]);
+
+
+    
+    
+  
+  
+  
 
 const  handleSubmit = (e) => {
-  axios({method: 'post',
-        url: 'http://jojo:8090/landing/api/v1/authenticate',
-        data: JSON.stringify(user1),
-        headers: {
-          'content-type': 'application/json'
-        }
-      })
-      .then(res => {
+  let buyer = appraisalCodes.filter(entry => entry.code===query.code).map(supplier => (
+   supplier.buyer
+  ))
+  let user1 = buildUser();
+  
+  
+  
+    axios({method: 'post',
+          // url: 'http://cscso-marketing-uat.dev.echonet:8090/landing/api/v1/authenticate',
+          url: 'https://server.com/qpp',
+          data: JSON.stringify(user1[0]),
+          headers: {
+            'content-type': 'application/json',
+            'x-buyer-id':  buyer
+          }
+        })
+        .then(res => {
         //setOauthToken(res.data.access_token);
 
-        console.log(res);
+        
         //return axios({
          // method: 'post',
           //url: 'http://jojo:8090/auth/admin/realms/SCDTP/users',
@@ -74,9 +129,13 @@ const  handleSubmit = (e) => {
               </Link>
             ))}
           </Flex>
-              <CustomLink path="http://jojo:8090">
+          {/* <CustomLink path="http://cscso-halo-uat.dev.echonet:8080"> */}
+          {/* <CustomLink path="http://cscso-halo-uat.dev.echonet:8080/halo-aq0887"> */}
+          <CustomLink path="https://server.com/app">
           <Button className="donate__btn" variant="secondary" aria-label="Get Started" onClick={handleSubmit}>
-                Join The Program
+                Join The Program {appraisalCodes.filter(entry => entry.code===query.code).map(supplier => (
+                  supplier.program
+                ))}
           </Button>
           </CustomLink>
           <MobileDrawer />

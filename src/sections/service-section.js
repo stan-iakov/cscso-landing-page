@@ -12,6 +12,9 @@ import shapePattern from 'assets/shape-pattern1.png';
 import Smart from 'assets/services/smart.svg';
 import Secure from 'assets/services/secure.svg';
 
+import dynamic from 'next/dynamic';
+const ModalVideo = dynamic(() => import('react-modal-video'), { ssr: false });
+
 const data = {
   subTitle: 'our services',
   title: 'Business Goals Achieved with fast, reliable invoice funding',
@@ -79,10 +82,11 @@ export default function ServiceSection() {
           </Grid>
           </Box>
       </Container>
-      {/* <ModalVideo 
+       {/* <ModalVideo 
       channel="youtube"
       isOpen={videoOpen}
-      videoId='hXAjjH5M8hY'
+      // videoId='hXAjjH5M8hY'
+      videoId='-kKIx8KTfiA'
       onClose={()=> setVideoOpen(false)}
       /> */}
     </section>

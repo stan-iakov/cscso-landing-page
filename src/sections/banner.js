@@ -7,22 +7,125 @@ import ShapeRight from 'assets/shape-right.png';
 import FeatureThumb from 'assets/blog/2.jpg';
 import Rating from 'components/rating';
 import Avatar1 from 'assets/testimonial/avatar2.png';
+import axios from 'axios';
+import qs from 'qs';
+import React, { useState } from 'react';
+import { CustomLink } from 'components/customLink';
+import { useRouter } from 'next/router';
+
+
+// const user1 = {
+//   firstName: "jojo",
+//   lastName: "jojo",
+//   email: "jojo@jojo.com",
+//   emailVerified: true,
+//   enabled: true,
+//   username: "jojo@jojo.com",
+//   attributes: {"locale": "en", "mobile_number": "+1234567890"},
+//   credentials: [
+//     {
+//       temporary: false,
+//       value: "password"
+//     }
+//   ]
+// };
 
 export default function Banner() {
+
+  
+  const {query}= useRouter();
+
+
+  const appraisalCodes = [
+    {code: "ABC-123",supplierName: "Stanimir Iakov", supplierEmail: "stanimir.iakov@bnpparibas.com",buyer: "Tesla",program: "Ethereum Star"},
+    {code: "DEF-456",supplierName: "Emmanuel Anjuere", supplierEmail: "emmanuel.anjuere@bnpparibas.com",buyer: "Thales",program: "Flying Bitcoin"},
+    {code: "GHI-789",supplierName: "Rokhaya Gaye Esnault", supplierEmail: "rokhaya.gayeesnault@bnpparibas.com",buyer: "Auchan",program: "Solana Arrow"},
+    {code: "JKL-011",supplierName: "Vincent Cognet", supplierEmail: "vincent.cognet@bnpparibas.com",buyer: "CAP Gemini",program: "Cardano Storm"},
+    {code: "MNO-012",supplierName: "Karim Zouad", supplierEmail: "karim.zouad@asia.bnpparibas.com",buyer: "SingTel",program: "Matic Lions"},
+    {code: "PQR-013",supplierName: "Ines Mohamed", supplierEmail: "ines.mohamed@bnpparibas.com",buyer: "GUINESS",program: "DAI Constellation"},
+    {code: "STU-014",supplierName: "Tanmoy Konar", supplierEmail: "tanmoy.konar@bnpparibas.com",buyer: "Reliance",program: "Litecoin Magic"},
+    {code: "VWX-015",supplierName: "Xavier Ly", supplierEmail: "xavier.ly@asia.bnpparibas.com",buyer: "HK Electric",program: "Polkadot Dream"},
+  ];
+
+  const buildUser = () => {
+    return appraisalCodes.filter(entry => entry.code===query.code).map((supplier) => {
+      return {
+        firstName: supplier.supplierName,
+        lastName: supplier.supplierName,
+        email: supplier.supplierEmail,
+        emailVerified: true,
+        enabled: true,
+        username: supplier.supplierEmail,
+        attributes: {"locale": "en", "mobile_number": "+1234567890"},
+        credentials: [
+           {
+             temporary: true,
+             value: "password"
+            }
+        ]     
+      }
+    })
+       
+  }
+
+  const jsonUser = JSON.stringify(buildUser()[0]);
+
+  
+
+
+  const  handleSubmit = (e) => {
+    let buyer = appraisalCodes.filter(entry => entry.code===query.code).map(supplier => (
+      supplier.buyer
+     ))
+     let user1 = buildUser();
+     
+    axios({method: 'post',
+          // url: 'http://cscso-marketing-uat.dev.echonet:8090/landing/api/v1/authenticate',
+          url: 'https://server.com/app',
+          data: JSON.stringify(user1[0]),
+          headers: {
+            'content-type': 'application/json',
+            'x-buyer-id': buyer
+          }
+        })
+        .then(res => {
+          //setOauthToken(res.data.access_token);
+  
+          console.log(res.data.access_token);
+          //return axios({
+           // method: 'post',
+            //url: 'http://jojo:8090/auth/admin/realms/SCDTP/users',
+            //data: qs.stringify(user1),
+            //headers: {'content-type': 'application/json',
+              //        'Authorization': 'Bearer ${oauthToken}'}
+            //})
+          })   
+  }
+  
   return (
     <section sx={styles.banner} id="home">
       <Container sx={styles.banner.container}>
         <Box sx={styles.banner.contentBox}>
           <Heading as="h1" variant="heroPrimary">
-            Top Supply Chain Program To Join
+          {appraisalCodes.filter(entry => entry.code===query.code).map(supplier => (
+                  supplier.program
+                ))} Program
             </Heading>
             <Text as="p" variant="heroSecondary">
-              Join This Program to have the Best Invoice Discounts
+              {appraisalCodes.filter(entry => entry.code===query.code).map(supplier => (
+                  supplier.supplierName
+                ))}, join This Program to have the Best Invoice Discounts
             </Text>
+            {/* <CustomLink path="http://cscso-halo-uat.dev.echonet:8080"> */}
+            {/* <CustomLink path="http://cscso-halo-uat.dev.echonet:8080/halo-aq0887"> */}
+            <CustomLink path="https://server.com/app"> 
             
-            <Button variant="primary">
-              Join
-              </Button>
+                <Button variant="primary" onClick={handleSubmit}>
+                Join {appraisalCodes.filter(entry => entry.code===query.code).map(supplier => (
+                  supplier.program
+                ))}
+                </Button>
+             </CustomLink>
               
           </Box>
           
